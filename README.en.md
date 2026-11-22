@@ -4,232 +4,240 @@
 
 # What Prompt Do You Need?
 
-**12 High-Leverage Meta-Cognitive Prompts**  
-One-sentence interventions to break AI coding & research agents out of tunnel vision, patch-stacking, sycophancy, and false confidence.
+**12 Diagnostic & Meta-Review Prompts for Iterative Engineering and Research**  
+Concise interventions for identifying path dependence, unverified assumptions, blind spots, and objective drift in multi-turn LLM sessions.
 
 [简体中文](README.md) · **English**
 
-[I. Cut Losses & Simplify](#part-1) · [II. Truth & Falsification](#part-2) · [III. Guardrails & Blind Spots](#part-3) · [IV. Clarity & Compounding](#part-4)
+[I. Complexity & Root-Cause Attribution](#part-1) · [II. Falsification & Verification](#part-2) · [III. Blind Spots & Scope Alignment](#part-3) · [IV. Clarity, Review & Rules](#part-4)
 
 </div>
 
 ---
 
-## Why Short Prompts Work Best
+## Motivation
 
-Long system instructions set baseline rules, yet in extended sessions agents still drift toward incremental patching, protecting their own prior code, agreeing with you, or hiding gaps behind jargon.
+Static system instructions define baseline constraints, yet in extended engineering and research workflows language models still exhibit recurring failure modes: favoring additive patches over simplification, defending positive outcomes instead of auditing them, blending inference with verified evidence, and gradually drifting away from the initial objective.
 
-Each prompt below is **1–2 sentences** and completely domain-agnostic. Instead of telling the agent *how* to edit code, it flips the agent's *cognitive mode*—from defending a solution to prosecuting it, from adding complexity to pruning it.
+The 12 prompts below are **1–2 sentence, domain-agnostic interventions**. Rather than prescribing implementation details, each prompt explicitly shifts the model's analytical stance (e.g., from code generation to falsification, deletion review, or boundary auditing).
 
-> Every prompt lives in its own code block for one-click copy on GitHub.
+> Each prompt is placed in a standalone code block for direct copy-and-paste reuse.
 
 ---
 
-## Quick Symptom Index
+## Diagnostic Index
 
-| When you sense that… | Use this prompt | Blind spot neutralized |
+| Observed Pattern | Prompt | Target Failure Mode |
 | :--- | :--- | :--- |
-| Code and plans keep growing heavier; nothing gets deleted | [**01 · Sunk-Cost Reset**](#p01) | Attachment to prior patches |
-| Several fixes in a row only move the failure around | [**02 · Root Cause vs. Symptom**](#p02) | Guardrails masking an upstream bug |
-| Flags, thresholds, and special cases are multiplying | [**03 · Complexity Invoice**](#p03) | Over-engineering & magic numbers |
-| The logic sounds smooth, but the foundation feels shaky | [**04 · Weakest Premise First**](#p04) | Unverified critical assumptions |
-| Tests went all-green or metrics jumped suspiciously fast | [**05 · Prosecutor Mode**](#p05) | False positives, leakage & silent fallback |
-| The proposal sounds confident, yet provenance is unclear | [**06 · Facts vs. Guesses Split**](#p06) | Hallucinated assumptions & stale docs |
-| Something important feels unexamined before wrapping up | [**07 · Negative-Space Audit**](#p07) | Tunnel vision & cherry-picking |
-| A long session drifted away from what you actually wanted | [**08 · Original-Goal Drift Check**](#p08) | Silent requirement downgrading |
-| Heavy effort is going into a component with tiny impact | [**09 · Oracle Upper-Bound Test**](#p09) | Micro-optimizing a low-ceiling bottleneck |
-| Answers are packed with acronyms yet feel hollow | [**10 · No-Jargon Mirror**](#p10) | Rhetoric disguising unclear thinking |
-| Feedback feels polite and avoids the hard flaws | [**11 · Hard-Reject Reviewer**](#p11) | Sycophancy & soft criticism |
-| A costly mistake just happened and must never recur | [**12 · Unbypassable One-Line Rule**](#p12) | Bloated rule docs nobody follows |
+| Code and plans grow monotonically across turns without pruning | [**01 · Zero-Baseline Deletion Review**](#p01) | Path dependence and incremental bias |
+| Repeated fixes add guards or special cases without resolving instability | [**02 · Root-Cause vs. Symptom-Suppression Split**](#p02) | Local workarounds masking upstream defects |
+| Flags, heuristic thresholds, and special branches keep accumulating | [**03 · Counterexample-Backed Complexity Audit**](#p03) | Defensive over-engineering and ad hoc constants |
+| Reasoning sounds coherent, yet foundational premises remain untested | [**04 · Implicit Premise Ranking & Minimal Falsification**](#p04) | Unverified load-bearing assumptions |
+| Tests pass completely or metrics improve faster than expected | [**05 · Adversarial Verification of Positive Results**](#p05) | False positives, leakage, mismatched baselines, or silent fallback |
+| Conclusions sound confident, but provenance is mixed | [**06 · Verified Facts vs. Unverified Assumptions**](#p06) | Conflating direct evidence with guesses or stale docs |
+| Analysis appears complete, yet coverage gaps remain uncertain | [**07 · Unexamined-Artifact Audit**](#p07) | Sampling bias and selective attention |
+| Mid-session implementation feels weaker than the original specification | [**08 · Initial-Objective Drift Comparison**](#p08) | Silent requirement downgrading over long context |
+| Heavy effort is spent optimizing a single sub-component | [**09 · Idealized Upper-Bound Analysis**](#p09) | Diminishing returns on a low-ceiling bottleneck |
+| Explanations rely heavily on acronyms and abstract phrasing | [**10 · Plain-Language Causal Restatement**](#p10) | Terminological obscurity masking unclear mechanics |
+| Reviews remain overly polite and avoid substantive weaknesses | [**11 · Strict-Rejection Peer Review**](#p11) | Sycophancy and softened criticism |
+| A costly error was resolved and must be prevented in future sessions | [**12 · Single-Sentence Regression Constraint**](#p12) | Sprawling instruction files that lose enforcement |
 
 ```mermaid
 flowchart LR
-    Q["Session feels off"] --> A["Bloated / spinning"]
-    Q --> B["Suspicious result / shaky premise"]
-    Q --> C["Drifting / low-ROI effort"]
-    Q --> D["Foggy prose / post-mortem"]
+    Q["Session Diagnostic Entry"] --> A["Bloat / Repeated Patching"]
+    Q --> B["Shaky Premise / Anomalous Gain"]
+    Q --> C["Scope Drift / Limited Headroom"]
+    Q --> D["Opaque Prose / Review & Rules"]
 
-    A --> A1["01 Sunk-Cost · 02 Root/Symptom · 03 Complexity Invoice"]
-    B --> B1["04 Weakest Premise · 05 Prosecutor · 06 Facts/Guesses"]
-    C --> C1["07 Negative Space · 08 Goal Drift · 09 Oracle Ceiling"]
-    D --> D1["10 No-Jargon · 11 Hard-Reject · 12 One-Line Rule"]
+    A --> A1["01 Deletion Review · 02 Root vs. Symptom · 03 Complexity Audit"]
+    B --> B1["04 Premise Falsification · 05 Adversarial Check · 06 Facts vs. Assumptions"]
+    C --> C1["07 Unexamined Artifacts · 08 Goal Drift · 09 Upper-Bound Analysis"]
+    D --> D1["10 Plain Restatement · 11 Strict Review · 12 Single-Sentence Rule"]
 ```
 
 ---
 
 <a id="part-1"></a>
 
-## I. Cut Losses & Simplify
+## I. Complexity Control & Root-Cause Attribution
+
+Used to contain architectural bloat after multiple iterations and isolate upstream defects hidden beneath local workarounds.
 
 <a id="p01"></a>
 
-### 01 · Sunk-Cost Reset
+### 01 · Zero-Baseline Deletion Review
 
-> **Trigger**: After multiple rounds of iteration, the design feels bloated and the agent only proposes additive edits.
+> **Context**: A codebase or design has accumulated complexity across rounds, while new proposals remain purely additive.
 
 ```text
-Pretend you just inherited this project today and none of the existing code or plans count as sunk cost. If you had authority to delete 50% of it, which half would you cut and why?
+Assume you are taking over this project today and none of the existing code or plans count as sunk cost. If you were permitted to delete 50% of the current implementation, which half would you remove first and why?
 ```
 
-- **Why it works**: Explicit permission to delete breaks the agent's default bias toward preserving everything it just wrote.
+- **Mechanism**: Models treat prior artifacts in context as fixed commitments by default; explicitly authorizing deletion surfaces transitional scaffolding and redundant modules.
 
 <a id="p02"></a>
 
-### 02 · Root Cause vs. Symptom
+### 02 · Root-Cause vs. Symptom-Suppression Split
 
-> **Trigger**: Consecutive fixes keep adding guards, filters, or special cases without stabilizing the system.
+> **Context**: Consecutive edits keep introducing guards, filters, or special cases without eliminating recurring failures.
 
 ```text
-Split our recent changes into two columns: "root-cause fixes" and "symptom suppressors (patches, guards, special cases)." If we reverted the entire second column, what single upstream defect would surface?
+Classify our recent changes into two categories: "root-cause fixes" and "symptom suppressors (patches, guards, special cases)." If the entire second category were reverted, what single upstream defect would surface?
 ```
 
-- **Why it works**: Strips away layered workarounds to expose the one upstream flaw worth fixing properly.
+- **Mechanism**: Separates surface mitigations from structural changes so diagnosis converges on the underlying fault.
 
 <a id="p03"></a>
 
-### 03 · Complexity Invoice
+### 03 · Counterexample-Backed Complexity Audit
 
-> **Trigger**: New switches, heuristic thresholds, or extra layers keep creeping into the design.
+> **Context**: Configuration flags, heuristic constants, or auxiliary abstractions accumulate without clear justification.
 
 ```text
-Write a "complexity invoice" for every component, switch, and constant in the current design: what exact failure counterexample happens if we remove it? Delete anything that cannot name a concrete counterexample.
+Provide a necessity justification for every module, switch, and constant in the current design: what concrete failure counterexample occurs if it is removed? Remove any item that cannot cite a concrete counterexample.
 ```
 
-- **Why it works**: Reverses the burden of proof—every bit of complexity must earn its keep with a concrete counterexample.
+- **Mechanism**: Shifts the burden of proof onto each unit of complexity by requiring a specific failure counterexample for retention.
 
 ---
 
 <a id="part-2"></a>
 
-## II. Truth & Falsification
+## II. Assumption Falsification & Verification
+
+Used to test load-bearing assumptions early and audit unexpectedly favorable outputs against primary evidence.
 
 <a id="p04"></a>
 
-### 04 · Weakest Premise First
+### 04 · Implicit Premise Ranking & Minimal Falsification
 
-> **Trigger**: Final gate before committing to heavy implementation or long-running experiments.
+> **Context**: Final checkpoint before committing to heavy implementation or long-running experiments.
 
 ```text
-Break our current plan into 3–5 implicit premises that must all hold true. Rank them from most likely to be false to least, and design a minimal 10-minute test to falsify #1.
+Decompose our current plan into 3–5 implicit premises that must simultaneously hold. Rank them from most likely to be false to least, and design a minimal test executable within 10 minutes to falsify the top-ranked premise.
 ```
 
-- **Why it works**: Attacks the weakest load-bearing assumption first before burning days downstream.
+- **Mechanism**: Makes hidden dependencies explicit and prioritizes cheap falsification of the weakest assumption before downstream investment.
 
 <a id="p05"></a>
 
-### 05 · Prosecutor Mode (Assume the Good Result Is Fake)
+### 05 · Adversarial Verification of Positive Results
 
-> **Trigger**: Unexpectedly strong metrics, disappearing errors, or an effortlessly green test suite.
+> **Context**: A test suite passes cleanly, a prior error disappears, or quantitative metrics improve beyond physical expectations.
 
 ```text
-Assume for now that this good result / all-green test is actually fake—caused by a bug, data leakage, mismatched evaluation, or silent fallback. Act as the prosecutor: list the 3 most plausible failure modes and verify each one against the evidence.
+Assume provisionally that this positive result or passing test suite is invalid—due to a bug, data leakage, evaluation mismatch, or silent fallback. From an adversarial review stance, identify the 3 most plausible invalidation paths and check each one against the source code and logs.
 ```
 
-- **Why it works**: Asking "is this right?" invites self-defense; assigning the prosecutor role immediately unlocks adversarial verification.
+- **Mechanism**: Neutral confirmation queries tend to elicit post-hoc rationalization; assigning an adversarial verification role encourages systematic checking of edge cases and evaluation parity.
 
 <a id="p06"></a>
 
-### 06 · Facts vs. Guesses Split
+### 06 · Verified Facts vs. Unverified Assumptions
 
-> **Trigger**: Rapid, confident diagnosis in an unfamiliar or complex codebase.
+> **Context**: Debugging unfamiliar codebases or multi-module systems where confident claims require provenance checks.
 
 ```text
-Hold off on proposing a fix. First give me two separate lists: (1) hard facts you directly verified in live source code or logs, and (2) assumptions in your reasoning that came from guessing, intuition, or older docs.
+Before proposing a fix, provide two separate lists: (1) facts directly verified from live source code, logs, or measurements, and (2) assumptions in the preceding reasoning drawn from inference, convention, or unverified documentation.
 ```
 
-- **Why it works**: Physically separates verified observations from unverified inference before any code gets touched.
+- **Mechanism**: Establishes an explicit boundary between direct observations and inferred premises prior to editing code.
 
 ---
 
 <a id="part-3"></a>
 
-## III. Guardrails & Blind Spots
+## III. Coverage Blind Spots & Scope Alignment
+
+Used to audit omitted artifacts, detect gradual drift from initial goals, and estimate system-level headroom.
 
 <a id="p07"></a>
 
-### 07 · Negative-Space Audit
+### 07 · Unexamined-Artifact Audit
 
-> **Trigger**: Right before finalizing a conclusion, architecture decision, or benchmark report.
+> **Context**: Prior to finalizing a diagnosis, technical report, or experimental conclusion.
 
 ```text
-Looking back over this entire investigation, what key branches, source files, metrics, or failing cases did we never open—yet if any of them contradicted us, our current conclusion would collapse?
+Reviewing this entire investigation, which critical branches, source files, evaluation metrics, or failing cases were never inspected, yet would invalidate our current conclusion if they behaved contrary to expectation?
 ```
 
-- **Why it works**: Forces an explicit scan of the agent's blind spots—unchecked branches, ignored stderr, or omitted failure cases.
+- **Mechanism**: Prompts a systematic sweep of uninspected artifacts—such as unchecked branches, truncated stderr logs, or excluded failure cases.
 
 <a id="p08"></a>
 
-### 08 · Original-Goal Drift Check
+### 08 · Initial-Objective Drift Comparison
 
-> **Trigger**: Mid-to-late stages of a long session when work feels subtly off-target.
+> **Context**: Mid-to-late turns of a long session where incremental compromises may have weakened core goals.
 
 ```text
-Put our very first goal from the start of this session side by side with the code or experiment you are working on right now: which core requirements were quietly downgraded, deferred, or redefined along the way?
+Compare the original objective from the start of this session side by side with the code or experiment currently underway: which core requirements have been quietly downgraded, deferred, or redefined?
 ```
 
-- **Why it works**: Catches silent requirement substitution that accumulates across long multi-turn compromises.
+- **Mechanism**: Direct comparison between the initial prompt and current artifacts reveals silent scope dilution or substitution of approximations for core requirements.
 
 <a id="p09"></a>
 
-### 09 · Oracle Upper-Bound Test (Amdahl Stop-Loss)
+### 09 · Idealized Upper-Bound Analysis
 
-> **Trigger**: Considering deep optimization or complex modeling for a single sub-component.
+> **Context**: Prior to investing in complex algorithmic or runtime optimization of an individual module.
 
 ```text
-Before writing any code: suppose this module magically became a perfect oracle tomorrow (zero runtime / 100% accuracy). How much better could the end-to-end system possibly get, and is that ceiling worth our effort?
+Before implementing changes, estimate an upper bound: if the target module reached an idealized limit (zero runtime overhead or 100% accuracy), what is the maximum possible improvement to the end-to-end system, and does that ceiling justify further effort?
 ```
 
-- **Why it works**: A 30-second Amdahl's Law check that prevents polishing a bottleneck with negligible system-level headroom.
+- **Mechanism**: Applies an Amdahl's-law framing before implementation to bound end-to-end headroom and avoid low-yield optimization.
 
 ---
 
 <a id="part-4"></a>
 
-## IV. Clarity & Compounding
+## IV. Clarity, Critical Review & Rule Distillation
+
+Used to strip opaque terminology, obtain substantive technical criticism, and distill post-mortems into enforceable rules.
 
 <a id="p10"></a>
 
-### 10 · No-Jargon Mirror
+### 10 · Plain-Language Causal Restatement
 
-> **Trigger**: Explanations or technical prose feel dense with acronyms and polished phrasing, yet unclear.
+> **Context**: Technical explanations or drafts are dense with acronyms and abstract phrasing while the core mechanism remains unclear.
 
 ```text
-Using zero acronyms, internal codenames, or marketing adjectives, explain in three plain sentences: what exact conflict are we stuck on, and what causal chain does our change actually alter?
+Using no acronyms, internal codenames, or decorative modifiers, state in three plain sentences: what core conflict are we facing, and which exact causal chain does our change alter?
 ```
 
-- **Why it works**: Removes terminological camouflage so unclear thinking is immediately visible.
+- **Mechanism**: Removing terminological abstraction exposes conceptual gaps and unsupported causal steps immediately.
 
 <a id="p11"></a>
 
-### 11 · Hard-Reject Reviewer
+### 11 · Strict-Rejection Peer Review
 
-> **Trigger**: Pre-submission paper review, research proposal vetting, or major design sign-off.
+> **Context**: Pre-submission manuscript review, research proposal vetting, or major design sign-off.
 
 ```text
-Skip polite suggestions. Act as a strict reviewer determined to Strong Reject this work, and give the 3 hardest-to-rebut fatal objections—each anchored in a concrete gap in our actual data or mechanism.
+Omit polite suggestions. Adopt the perspective of a strict reviewer inclined toward Strong Reject and list the 3 hardest-to-rebut technical objections, each anchored in a concrete gap in our current data, assumptions, or mechanism.
 ```
 
-- **Why it works**: Shuts down sycophancy while banning generic criticism, surfacing real high-severity weaknesses early.
+- **Mechanism**: Counteracts default agreeableness while constraining critiques to concrete evidence in the current artifact rather than generic remarks.
 
 <a id="p12"></a>
 
-### 12 · Unbypassable One-Line Rule
+### 12 · Single-Sentence Regression Constraint
 
-> **Trigger**: Closing out a session right after surviving a painful or costly mistake.
+> **Context**: Concluding a session after diagnosing a costly defect or avoidable rework.
 
 ```text
-What was the single most expensive mistake we hit in this task? If we can only add one sentence to AGENTS.md so future-you can never bypass it again, how should that sentence be phrased?
+What was the highest-cost failure mode encountered in this task? If we can add only one sentence to AGENTS.md to prevent future sessions from repeating it, how should that constraint be stated so it is unambiguous and difficult to bypass?
 ```
 
-- **Why it works**: Compresses post-mortems into sharp, enforceable guardrails instead of sprawling rules files nobody reads.
+- **Mechanism**: Compresses lessons learned into concise, checkable rules rather than growing verbose instruction files that degrade adherence.
 
 ---
 
-## How to Use
+## Usage Notes
 
-- **One at a time**: Firing a single targeted sentence works far better than stacking three prompts together.
-- **Hide your bias**: Paste the prompt without telegraphing the answer you expect, then compare judgments.
-- **Timing**: Use `04 / 06 / 09` before building, `01 / 02 / 03 / 08` mid-flight, and `05 / 07 / 11 / 12` before shipping.
+- **One prompt per turn**: Applying a single targeted prompt yields deeper analysis than stacking multiple prompts at once.
+- **Keep framing neutral**: Avoid hinting at the expected conclusion when issuing the prompt; compare independent judgments afterward.
+- **Stage alignment**: Prompts `04 / 06 / 09` fit pre-implementation review, `01 / 02 / 03 / 08` fit mid-iteration correction, and `05 / 07 / 11 / 12` fit verification and post-mortem synthesis.
 
 <div align="right">
 
